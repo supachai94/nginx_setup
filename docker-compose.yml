@@ -11,41 +11,41 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./sites:/etc/nginx/conf.d:ro
       - ./logs:/var/log/nginx
-      - ../laravel:/var/www/html:ro
+      - ../php_project:/var/www/html:ro
     depends_on:
       - php74
       - php82
     restart: unless-stopped
     networks:
-      - laravel_network
+      - php-network
 
   php74:
     image: php:7.4-fpm-alpine
     container_name: php74_fpm
     volumes:
-      - ../laravel:/var/www/html
+      - ../php_project:/var/www/html
     working_dir: /var/www/html
     restart: unless-stopped
     networks:
-      - laravel_network
+      - php-network
     command: >
-      sh -c "docker-php-ext-install pdo_mysql pdo_pgsql
+      sh -c "docker-php-ext-install pdo_mysql
       && php-fpm"
 
   php82:
     image: php:8.2-fpm-alpine
     container_name: php82_fpm
     volumes:
-      - ../laravel:/var/www/html
+      - ../php_project:/var/www/html
     working_dir: /var/www/html
     restart: unless-stopped
     networks:
-      - laravel_network
+      - php-network
     command: >
-      sh -c "docker-php-ext-install pdo_mysql pdo_pgsql
+      sh -c "docker-php-ext-install pdo_mysql
       && php-fpm"
 
 networks:
-  laravel_network:
+  php-network:
     driver: bridge
 
