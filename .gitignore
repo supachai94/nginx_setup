@@ -22,3 +22,5 @@ Thumbs.db
 *.bak
 *.cache
 
+# Local site configs
+sites/
