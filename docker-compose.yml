@@ -15,12 +15,13 @@ services:
     depends_on:
       - php74
       - php82
+      - php84
     restart: unless-stopped
     networks:
       - php-network
 
   php74:
-    image: php:7.4-fpm-alpine
+    build: ./php74  # ชี้ไปที่ folder ที่มี Dockerfile
     container_name: php74_fpm
     volumes:
       - ../php_project:/var/www/html
@@ -28,12 +29,9 @@ services:
     restart: unless-stopped
     networks:
       - php-network
-    command: >
-      sh -c "docker-php-ext-install pdo_mysql
-      && php-fpm"
 
   php82:
-    image: php:8.2-fpm-alpine
+    build: ./php82
     container_name: php82_fpm
     volumes:
       - ../php_project:/var/www/html
@@ -41,11 +39,17 @@ services:
     restart: unless-stopped
     networks:
       - php-network
-    command: >
-      sh -c "docker-php-ext-install pdo_mysql
-      && php-fpm"
+
+  php84:
+    build: ./php84
+    container_name: php84_fpm
+    volumes:
+      - ../php_project:/var/www/html
+    working_dir: /var/www/html
+    restart: unless-stopped
+    networks:
+      - php-network
 
 networks:
   php-network:
     driver: bridge
-
