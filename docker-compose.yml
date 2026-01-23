@@ -7,9 +7,18 @@ services:
     ports:
       - "80:80"
       - "443:443"
+
+      - "8082:8082"
+      - "8084:8084"
+      - "8095:8095"
+      - "8086:8086"
+      - "8089:8089"
+      - "8099:8099"
+  
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./sites:/etc/nginx/conf.d:ro
+      - ./letsencrypt:/etc/ca-certificates:ro
       - ./logs:/var/log/nginx
       - ../php_project:/var/www/html:ro
     depends_on:
@@ -21,7 +30,7 @@ services:
       - php-network
 
   php74:
-    build: ./php74  # ชี้ไปที่ folder ที่มี Dockerfile
+    build: ./php74
     container_name: php74_fpm
     volumes:
       - ../php_project:/var/www/html
@@ -29,6 +38,10 @@ services:
     restart: unless-stopped
     networks:
       - php-network
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp:unconfined
 
   php82:
     build: ./php82
@@ -39,6 +52,10 @@ services:
     restart: unless-stopped
     networks:
       - php-network
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp:unconfined
 
   php84:
     build: ./php84
@@ -49,6 +66,10 @@ services:
     restart: unless-stopped
     networks:
       - php-network
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp:unconfined
 
 networks:
   php-network:
