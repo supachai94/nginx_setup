@@ -16,7 +16,7 @@ services:
       - ./sites:/etc/nginx/conf.d:ro
       - ./letsencrypt:/etc/ca-certificates:ro
       - ./logs:/var/log/nginx
-      - ../php_project:/var/www/html:ro
+      - ./apps:/var/www/apps:ro
     depends_on:
       - php74
       - php81
@@ -29,8 +29,8 @@ services:
     build: ./php74
     container_name: php74_fpm
     volumes:
-      - ../php_project:/var/www/html
-    working_dir: /var/www/html
+      - ./apps:/var/www/apps
+    working_dir: /var/www/apps
     restart: unless-stopped
     networks:
       - php-network
@@ -43,8 +43,8 @@ services:
     build: ./php81
     container_name: php81_fpm
     volumes:
-      - ../php_project:/var/www/html
-    working_dir: /var/www/html
+      - ./apps:/var/www/apps
+    working_dir: /var/www/apps
     restart: unless-stopped
     networks:
       - php-network
@@ -57,8 +57,8 @@ services:
     build: ./php82
     container_name: php82_fpm
     volumes:
-      - ../php_project:/var/www/html
-    working_dir: /var/www/html
+      - ./apps:/var/www/apps
+    working_dir: /var/www/apps
     restart: unless-stopped
     networks:
       - php-network
@@ -71,8 +71,8 @@ services:
     build: ./php84
     container_name: php84_fpm
     volumes:
-      - ../php_project:/var/www/html
-    working_dir: /var/www/html
+      - ./apps:/var/www/apps
+    working_dir: /var/www/apps
     restart: unless-stopped
     networks:
       - php-network
