@@ -24,3 +24,6 @@ Thumbs.db
 
 # Local site configs
 sites/
+
+# Laravel example apps
+apps/

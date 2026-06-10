@@ -6,32 +6,37 @@
 nginx/
 ├── nginx.conf                  # ไฟล์ config หลัก
 ├── sites/                      # โฟลเดอร์สำหรับ config แต่ละเว็บไซต์
-│   ├── laravel.conf            # Config สำหรับ Laravel (ใช้ PHP 8.2)
-│   ├── laravel-php74.conf      # Config สำหรับ Laravel (ใช้ PHP 7.4)
-│   ├── laravel-php82.conf      # Config สำหรับ Laravel (ใช้ PHP 8.2)
-│   └── example.conf            # ตัวอย่าง config สำหรับเว็บไซต์อื่น
-├── docker-compose.yml          # Docker Compose (nginx + PHP 7.4 + PHP 8.2)
+│   ├── laravel8.conf           # Laravel 8 -> PHP 7.4
+│   ├── laravel9.conf           # Laravel 9 -> PHP 8.1
+│   └── laravel10.conf          # Laravel 10 -> PHP 8.4
+├── php74/                      # PHP-FPM 7.4 image config
+├── php81/                      # PHP-FPM 8.1 image config
+├── php82/                      # PHP-FPM 8.2 image config
+├── php84/                      # PHP-FPM 8.4 image config
+├── docker-compose.yml          # Docker Compose stack
 └── logs/                       # โฟลเดอร์สำหรับเก็บ log files
 ```
 
 ## วิธีใช้งาน
 
-### รัน stack (nginx + PHP 7.4 + PHP 8.2)
+### รัน stack
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 Stack นี้จะรัน:
 - **nginx**: Web server
 - **php74**: PHP 7.4-FPM
+- **php81**: PHP 8.1-FPM
 - **php82**: PHP 8.2-FPM
+- **php84**: PHP 8.4-FPM
 
 ## การเพิ่มเว็บไซต์ใหม่
 
 1. สร้างไฟล์ config ใหม่ในโฟลเดอร์ `sites/`
    ```bash
-   cp sites/example.conf sites/mywebsite.conf
+   cp sites/laravel10.conf sites/mywebsite.conf
    ```
 
 2. แก้ไขไฟล์ `sites/mywebsite.conf`:
@@ -40,22 +45,28 @@ Stack นี้จะรัน:
    - ปรับ `access_log` และ `error_log` ให้เป็นชื่อเฉพาะ
    - เลือก PHP version ที่ต้องการ:
      - `fastcgi_pass php74:9000;` สำหรับ PHP 7.4
+     - `fastcgi_pass php81:9000;` สำหรับ PHP 8.1
      - `fastcgi_pass php82:9000;` สำหรับ PHP 8.2
+     - `fastcgi_pass php84:9000;` สำหรับ PHP 8.4
 
 3. Restart nginx container
    ```bash
-   docker-compose restart nginx
+   docker compose restart nginx
    ```
 
 ## การเลือกใช้ PHP Version
-
-ในแต่ละเว็บไซต์ config คุณสามารถเลือกใช้ PHP version ที่ต้องการได้:
 
 ### ใช้ PHP 7.4
 ```nginx
 location ~ \.php$ {
     fastcgi_pass php74:9000;
-    # ... config อื่นๆ
+}
+```
+
+### ใช้ PHP 8.1
+```nginx
+location ~ \.php$ {
+    fastcgi_pass php81:9000;
 }
 ```
 
@@ -63,14 +74,20 @@ location ~ \.php$ {
 ```nginx
 location ~ \.php$ {
     fastcgi_pass php82:9000;
-    # ... config อื่นๆ
 }
 ```
 
-### ตัวอย่าง Config ที่มีอยู่แล้ว
-- `laravel.conf` - ใช้ PHP 8.2 (default)
-- `laravel-php74.conf` - ใช้ PHP 7.4
-- `laravel-php82.conf` - ใช้ PHP 8.2
+### ใช้ PHP 8.4
+```nginx
+location ~ \.php$ {
+    fastcgi_pass php84:9000;
+}
+```
+
+## ตัวอย่าง Config ที่มีอยู่แล้ว
+- `laravel8.conf` - ใช้ PHP 7.4
+- `laravel9.conf` - ใช้ PHP 8.1
+- `laravel10.conf` - ใช้ PHP 8.4
 
 ## หมายเหตุ
 
